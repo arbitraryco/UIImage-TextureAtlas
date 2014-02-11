@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Jamie Kosoy" => "jamie@arbitrary.io" }
   s.source       = { 
-    :git => "https://github.com/subdigital/BSModalPickerView.git", 
+    :git => "https://github.com/arbitraryco/UIImage-TextureAtlas.git", 
     :tag => "0.1"
   }
 
