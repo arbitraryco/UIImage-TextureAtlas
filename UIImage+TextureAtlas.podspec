@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { "Jamie Kosoy" => "jamie@arbitrary.io" }
   s.source       = { 
     :git => "https://github.com/arbitraryco/UIImage-TextureAtlas.git", 
-    :tag => "0.1"
+    :tag => "0.2"
   }
 
   s.platform     = :ios, '7.0'
