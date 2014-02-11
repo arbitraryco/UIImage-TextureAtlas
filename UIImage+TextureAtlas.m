@@ -21,10 +21,7 @@
         return cache[filename];
     }
     
-    NSLog(@"new images");
-    
-    
-    CGFloat scale = [UIScreen mainScreen].scale;
+    // CGFloat scale = [UIScreen mainScreen].scale;
 
     NSString* file = [[filename lastPathComponent] stringByDeletingPathExtension];
     NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@.atlasc/%@", file, file] ofType:@"plist"];
