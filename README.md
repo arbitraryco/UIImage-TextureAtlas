@@ -94,8 +94,8 @@ As above but limits the return array to a sequence of images with a start and en
 To Do
 =================
 - Demo projects.
-- Handle retina vs. non-retina graphics. Right now this assumes one atlas without looking at scale.
-- Handle if images are rotated when generated. Right now the atlas plist states that this is possible but we've yet to encounter a case where that happens.
+- Handle iPad graphics via ~ipad suffix.
+- Optimize
 
 -----
 
