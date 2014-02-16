@@ -20,8 +20,6 @@
     if(cache[filename]) {
         return cache[filename];
     }
-    
-    // CGFloat scale = [UIScreen mainScreen].scale;
 
     NSString* file = [[filename lastPathComponent] stringByDeletingPathExtension];
     NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@.atlasc/%@", file, file] ofType:@"plist"];
@@ -30,7 +28,32 @@
     NSMutableDictionary *atlas = [NSMutableDictionary dictionary];
 
     NSArray *images = atlasDictionary[@"images"];
-    [images enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+    NSArray *relevantImages;
+    
+    BOOL hasRetinaImages = NO;
+    CGFloat scale = [UIScreen mainScreen].scale;
+
+    if(scale == 2.0) {
+        NSPredicate *retina = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *evaluatedObject, NSDictionary *bindings) {
+            NSString *file = [evaluatedObject[@"path"] stringByDeletingPathExtension];
+            return [file hasSuffix:@"@2x"];
+        }];
+
+        relevantImages = [images filteredArrayUsingPredicate:retina];
+        hasRetinaImages = YES;
+        
+        // jk: TO DO :: ipad retina
+        
+        if(relevantImages.count == 0) {
+            relevantImages = images;
+        }
+    }
+    else {
+        // jk: TO DO :: ipad
+        relevantImages = images;
+    }
+
+    [relevantImages enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
         NSString *imagePath = obj[@"path"];
         NSString *imageFile = [[imagePath lastPathComponent] stringByDeletingPathExtension];
         NSString *imageExtension = [imagePath pathExtension];
@@ -62,13 +85,42 @@
                     CGRect rect = CGRectZero;
                     rect.origin = spriteOffset;
                     rect.size = textureRect.size;
-                    
+
                     CGContextDrawImage(ctx, rect, sprite);
-                    
+
                     spriteImage = UIGraphicsGetImageFromCurrentImageContext();
                 } UIGraphicsEndImageContext();
+                
+                if(hasRetinaImages) {
+                    spriteImage = [UIImage imageWithCGImage:spriteImage.CGImage scale:scale orientation:UIImageOrientationUp];
+                }
+                
+                // jk: TO DO: optimize
+                if(obj[@"textureRotated"]) {
+                    float degrees = -90;
 
-                atlas[obj[@"name"]] = spriteImage;
+                    CGFloat rads = M_PI * degrees / 180;
+                    float newSide = MAX(spriteImage.size.width, spriteImage.size.height);
+                    CGSize size =  CGSizeMake(newSide, newSide);
+                    UIGraphicsBeginImageContext(size);
+                    CGContextRef ctx = UIGraphicsGetCurrentContext();
+                    CGContextTranslateCTM(ctx, newSide/2, newSide/2);
+                    CGContextRotateCTM(ctx, rads);
+                    CGContextDrawImage(UIGraphicsGetCurrentContext(),CGRectMake(-spriteImage.size.width/2,-spriteImage.size.height/2,size.width, size.height),spriteImage.CGImage);
+                    spriteImage = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                }
+                
+                // remove @2x and what have you. not perfect right now.
+                NSString *name = obj[@"name"];
+                NSString *nameNoExt = [name stringByDeletingPathExtension];
+                NSString *nameExt = [nameNoExt stringByReplacingOccurrencesOfString:nameNoExt withString:@""];
+                
+                if(scale == 2.0) {
+                    nameNoExt = [name stringByReplacingOccurrencesOfString:@"@2x" withString:@""];
+                }
+
+                atlas[[NSString stringWithFormat:@"%@%@",nameNoExt,nameExt]] = spriteImage;
             } CGImageRelease(sprite);
         }];
     }];
