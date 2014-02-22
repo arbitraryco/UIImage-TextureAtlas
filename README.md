@@ -22,7 +22,9 @@ Example Usage
 - In your project Build Settings, locate **Enable Texture Atlas Generation** and set it to **Yes**.
 - Import the category at the top of your source where you wish to use an atlas.
 
-		import <UIImage+TextureAtlas/UIImage+TextureAtlas.h>
+```obj-c
+import <UIImage+TextureAtlas/UIImage+TextureAtlas.h>
+````
 
 - Load a sequence using the following syntax:
 
