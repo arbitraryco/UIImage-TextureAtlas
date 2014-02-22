@@ -2,11 +2,17 @@ UIImage+TextureAtlas
 =================
 UIImage category to convert XCode generated Texture Atlas files into UIImages. Useful for animations outside of SpriteKit.
 
+### Features
+- Caches atlases in memory for fast access later on. Or delete the atlases from the cache once completed. Your choice.
+- No need to use the SpriteKit framework. Use PNG sequences with UIImageViews, or just compress all your app artwork into a single spritesheet using Apple tools!
+
 Setting Up
 =================
 Via Cocoapods
 
-	pod 'UIImage+TextureAtlas', '~> 0.1'
+```
+pod 'UIImage+TextureAtlas', '~> '1.0'
+```
 
 Example Usage
 =================
@@ -20,15 +26,17 @@ Example Usage
 
 - Load a sequence using the following syntax:
 
-	    NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName.plist" sequence:@"NameOfFiles__%04d.png"];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:sequence[0]];
-        imageView.animationImages = sequence;
-        imageView.animationRepeatCount = 0;
-        imageView.animationDuration = 1.0f;
+```obj-c
+NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName" sequence:@"NameOfFiles__%04d.png"];
+UIImageView *imageView = [[UIImageView alloc] initWithImage:sequence[0]];
+imageView.animationImages = sequence;
+imageView.animationRepeatCount = 0;
+imageView.animationDuration = 1.0f;
 
-        [imageView startAnimating];
+[imageView startAnimating];
 
-        // add the imageView to a subview.
+// add the imageView to a subview.
+```
 
 Usage
 -------
@@ -39,10 +47,12 @@ Return an NSDictionary with the keys representing the original filenames of your
 
 Example: 
 
-	// assuming you had a folder named myAtlasName.atlas with an image in there named Foo.png.
+```obj-c
+// assuming you had a folder named myAtlasName.atlas with an image in there named Foo.png.
 
-	NSDictionary *atlas = [UIImage atlas:@"myAtlastName.plist"];
-	UIImage *foo = atlas[@"Foo.png"];
+NSDictionary *atlas = [UIImage atlas:@"myAtlastName"];
+UIImage *foo = atlas[@"Foo.png"];
+```
 
 ### + (NSArray *)spritesWithContentsOfAtlas:(NSString *)filename sequence:(NSString *)sequence;
 
@@ -50,57 +60,104 @@ Returns an NSArray with a list of UIImages. Great for using in conjunction with 
 
 Example:
 
-	// assuming you had a folder named myAtlasName.atlas with the following images inside of it:
-	// MySequence__0000.png
-	// MySequence__0001.png
-	// MySequence__0002.png
-	// MySequence__0003.png
-	// ....
-	// MySequence__0099.png
+```obj-c
+// assuming you had a folder named myAtlasName.atlas with the following images inside of it:
+// MySequence__0000.png
+// MySequence__0001.png
+// MySequence__0002.png
+// MySequence__0003.png
+// ....
+// MySequence__0099.png
 
-	NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName.plist" sequence:@"MySequence__%04d.png"];
+NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName" sequence:@"MySequence__%04d.png"];
 
-	UIImageView *imageView = [UIImageView alloc] initWithImage:sequence[0]];
-	imageView.animationImages = sequence;
-	imageView.animationDuration = 1.0;
-	imageView.animationRepeatCount = 0;
+UIImageView *imageView = [UIImageView alloc] initWithImage:sequence[0]];
+imageView.animationImages = sequence;
+imageView.animationDuration = 1.0;
+imageView.animationRepeatCount = 0;
 
-	[imageView startAnimating];
+[imageView startAnimating];
+```
+
+### + (NSArray *)spritesWithContentsOfAtlas:(NSString *)filename sequence:(NSString *)sequence start:(int)start end:(int)end;
+
+As above but limits the return array to a sequence that starts with a start frame of your choosing.
+
+```obj-c
+// assuming you had a folder named myAtlasName.atlas with the following images inside of it:
+// MySequence__0021.png
+// MySequence__0022.png
+// MySequence__0023.png
+// MySequence__0024.png
+// MySequence__0025.png
+// ...
+// MySequence__0099.png
+
+NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName" sequence:@"MySequence__%04d.png" start:21];
+
+UIImageView *imageView = [UIImageView alloc] initWithImage:sequence[0]];
+imageView.animationImages = sequence; 
+imageView.animationDuration = 1.0;
+imageView.animationRepeatCount = 0;
+
+[imageView startAnimating];
+```
+
 
 ### + (NSArray *)spritesWithContentsOfAtlas:(NSString *)filename sequence:(NSString *)sequence start:(int)start end:(int)end;
 
 As above but limits the return array to a sequence of images with a start and end frame specified.
 
-	// assuming you had a folder named myAtlasName.atlas with the following images inside of it:
-	// MySequence__0001.png
-	// MySequence__0002.png
-	// MySequence__0003.png
-	// MySequence__0004.png
-	// MySequence__0005.png
+```obj-c
+// assuming you had a folder named myAtlasName.atlas with the following images inside of it:
+// MySequence__0001.png
+// MySequence__0002.png
+// MySequence__0003.png
+// MySequence__0004.png
+// MySequence__0005.png
 
-	NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName.plist" sequence:@"MySequence__%04d.png" start:1 end:5];
+NSArray *sequence = [UIImage spritesWithContentsOfAtlas:@"myAtlasName" sequence:@"MySequence__%04d.png" start:1 end:5];
 
-	UIImageView *imageView = [UIImageView alloc] initWithImage:sequence[0]];
-	imageView.animationImages = sequence; 
-	imageView.animationDuration = 1.0;
-	imageView.animationRepeatCount = 0;
+UIImageView *imageView = [UIImageView alloc] initWithImage:sequence[0]];
+imageView.animationImages = sequence; 
+imageView.animationDuration = 1.0;
+imageView.animationRepeatCount = 0;
 
-	[imageView startAnimating];
+[imageView startAnimating];
+```
 
-####You do **not** need to import the SpriteKit framework for this to work.
+### + (void)removeAtlasFromCache:(NSString *)filename;
+
+Removes a dictionary from the cache.
+
+Note: Calling any of the methods documented above will subsequently force your application to reload and reparse a Texture Atlas.
+
+```obj-c
+NSDictionary *myAtlas = [UIImage atlas:@"myAtlasName"];
+
+// ...
+
+[UIImage removeAtlasFromCache:@"myAtlasName"];
+```
+
 
 -----
 
-To Do
+Known Issues
 =================
-- Demo projects.
-- Handle iPad graphics via ~ipad suffix.
-- Optimize
+- Files marked with an iPad suffix (~ipad) aren't supported.
 
 -----
 
 Version History
 =================
+#### 1.0
+- First major release.
+- Rewritten to solve orientation issues.
+- Optimized. No longer creating unnneccessary UIImages.
+- Demo project added.
+- Added method to remove a cached atlas.
+
 #### 0.4
 - Updated documentation. Added To Do List.
 

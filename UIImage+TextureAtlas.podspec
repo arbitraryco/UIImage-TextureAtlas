@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "UIImage+TextureAtlas"
-  s.version      = "0.5"
+  s.version      = "1.0"
   s.summary      = "UIImage category to convert XCode generated Texture Atlas files into UIImages. Useful for animations outside of SpriteKit."
   s.homepage     = "https://arbitrary.io"
 
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { "Jamie Kosoy" => "jamie@arbitrary.io" }
   s.source       = { 
     :git => "https://github.com/arbitraryco/UIImage-TextureAtlas.git", 
-    :tag => "0.5"
+    :tag => "1.0"
   }
 
   s.platform     = :ios, '7.0'
