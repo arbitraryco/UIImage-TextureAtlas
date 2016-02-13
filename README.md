@@ -8,7 +8,7 @@ UIImage category to convert XCode generated Texture Atlas files into UIImages. U
 
 Setting Up
 =================
-- Install via Cocoapods, or pull this repo and import UIImage+TextureAtlas.h and UIImage+TextureAtlas.m into your project.
+- Install via CocoaPods, or pull this repo and import UIImage+TextureAtlas.h and UIImage+TextureAtlas.m into your project.
 
 ```
 pod 'UIImage+TextureAtlas', '~> '1.0'
